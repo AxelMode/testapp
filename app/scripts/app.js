@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 angular
-  .module('testappApp', [
+  .module('testApp', [
     'ngCookies',
     'ngMessages',
     'ngResource',
