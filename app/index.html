@@ -27,7 +27,8 @@
     </div>
 
     <div class="container">
-      <div ng-view=""></div>
+      <!-- Enlace al posible estado  -->
+      <ui-view> <a ui-sref="home" ui-sref-active="active">Hello</a></ui-view>
     </div>
 
     <div class="footer">
@@ -41,20 +42,17 @@
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-messages/angular-messages.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
+
+
+        <!-- El nuevo módulo debe indicarse aquí-->
+        <script src="modules/home/home-state.js"></script>
+        <script src="app.js"></script>
+        
         <!-- endbuild -->
 </body>
 </html>
