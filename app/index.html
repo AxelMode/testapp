@@ -27,8 +27,11 @@
     </div>
 
     <div class="container">
-      <!-- Enlace al posible estado  -->
-      <ui-view> <a ui-sref="home" ui-sref-active="active">Hello</a></ui-view>
+      <!-- El tag ui-view es una ventana que sirve para que, cuando un estado esté activo, la vista asociada al este (la template) se cargue dentro de la ventana -->
+      <ui-view> 
+      <!-- La directiva ui-sref se comporta de forma similar a un href pero,
+      en lugar de referenciar una URL como este, referencia un estado. -->
+      <a ui-sref="login" ui-sref-active="active">Login</a></ui-view>
     </div>
 
     <div class="footer">
@@ -50,9 +53,12 @@
 
 
         <!-- El nuevo módulo debe indicarse aquí-->
-        <script src="modules/home/home-state.js"></script>
+
         <script src="app.js"></script>
-        
+
+        <script src="modules/login/login-state.js"></script>
+        <script src="modules/login/login-controller.js"></script>
+        <script src="modules/login/login-service.js"></script>
         <!-- endbuild -->
 </body>
 </html>
