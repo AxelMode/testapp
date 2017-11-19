@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('testApp.login')
-	.service('loginService', loginService);
+	.factory('loginService', loginService);
 
 	loginService.$inject = ['$log'];
 
@@ -12,9 +12,18 @@
 			login: login
 		};
 
-		function login(email, password) {
-			$log.info('Datos recibidos: Email: ' + email + ' Password: ' + password);
+		function login(email, password, callbackFunction) {
 			//TODO: Call to $http method to retrieve userData.
+
+			var response = {
+				'name': 'Axel',
+				'surname': 'God of War',
+				'age' : 38,
+				'gender': 'male',
+				'address' : 'My personal address'
+			};
+
+			callbackFunction(response);
 		}
 
 		return service;

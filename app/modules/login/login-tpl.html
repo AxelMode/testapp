@@ -1,27 +1,25 @@
-<div class="jumbotron">
+<div class="row">
+	<div class="text-center">
+		<h3>Login Screen</h3>
+	</div>
+</div>
+<form name="loginForm">
 	<div class="row">
-		<div class="text-center">
-			<h3>Login Screen</h3>
+		<div class="col-md-4 col-md-offset-4 {{loginForm.email.$error.required ? 'has-error' : ''}}">
+			<label for="email">Email</label>
+			<input type="text" name="email" placeholder="Email" size="60" ng-model="vm.email" ng-required="true" class="form-control"></input>
 		</div>
 	</div>
-	<form name="loginForm">
-		<div class="row">
-			<div class="col-md-4 col-md-offset-4 {{loginForm.email.$error.required ? 'has-error' : ''}}">
-				<label for="email">Email</label>
-				<input type="text" name="email" placeholder="Email" size="60" ng-model="vm.email" ng-required="true" class="form-control"></input>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4 col-md-offset-4 {{loginForm.password.$error.required ? 'has-error' : ''}}">
-				<label for="password">Password</label>
-				<input type="password" name="password" placeholder="Password" size="40" ng-model="vm.password" ng-required="true" class="form-control"></input>
-			</div>
-		</div>
-	</form>
 	<div class="row">
-		<div class="text-right">
-			<button type="submit" class="btn btn-primary" ng-click="vm.doLogin()" ng-disabled="loginForm.$invalid">Login</button>
+		<div class="col-md-4 col-md-offset-4 {{loginForm.password.$error.required ? 'has-error' : ''}}">
+			<label for="password">Password</label>
+			<input type="password" name="password" placeholder="Password" size="40" ng-model="vm.password" ng-required="true" class="form-control"></input>
 		</div>
+	</div>
+</form>
+<div class="row">
+	<div class="text-right">
+		<button type="submit" class="btn btn-primary" ng-click="vm.doLogin()" ng-disabled="loginForm.$invalid">Login</button>
 	</div>
 </div>
 <div class="row">

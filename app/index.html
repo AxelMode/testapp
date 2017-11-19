@@ -27,12 +27,14 @@
     </div>
 
     <div class="container">
-      <!-- El tag ui-view es una ventana que sirve para que, cuando un estado esté activo, la vista asociada al este (la template) se cargue dentro de la ventana -->
-      <ui-view> 
-      <!-- La directiva ui-sref se comporta de forma similar a un href pero,
-      en lugar de referenciar una URL como este, referencia un estado. -->
-      <a ui-sref="login" ui-sref-active="active">Login</a></ui-view>
+      <div class="jumbotron">
+        <!-- El tag ui-view es una ventana que sirve para que, cuando un estado esté activo, la vista asociada al este (la template) se cargue dentro de la ventana -->    
+        <ui-view> 
+        <!-- La directiva ui-sref se comporta de forma similar a un href pero,
+        en lugar de referenciar una URL como este, referencia un estado. -->
+        <a ui-sref="login" ui-sref-active="active">Login</a></ui-view>
     </div>
+  </div>
 
     <div class="footer">
       <div class="container">
@@ -57,8 +59,15 @@
         <script src="app.js"></script>
 
         <script src="modules/login/login-state.js"></script>
+        <script src="modules/userdata/userdata-state.js"></script>
+
+        
         <script src="modules/login/login-controller.js"></script>
         <script src="modules/login/login-service.js"></script>
+
+
+        <script src="modules/userdata/userdata-controller.js"></script>
+
         <!-- endbuild -->
 </body>
 </html>

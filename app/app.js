@@ -5,5 +5,6 @@
 //depende del módulo "ui.router" y de "testApp.home".
 angular.module('testApp', [
   'ui.router',
-  'testApp.login']);
+  'testApp.login',
+  'testApp.userdata']);
 })();
