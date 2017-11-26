@@ -1,0 +1,208 @@
+Git
+
+Para entender Git vamos a hacer un tutorial paso a paso en el que veremos los
+conceptos más importantes.
+
+En primer lugar, para querer usar un control de versiones, necesitamos tener
+algo que queramos tener bajo control como por ejemplo un proyecto java, documentos
+o cualquier otra cosa susceptible de ser modificada por una o varias personas y para
+la que queramos mantener un historial de cambios.
+
+Para este ejemplo crearemos la carpeta pruebas y dentro de esta podremos un fichero de texto
+llamado file-1.txt
+
+Suponiendo que queramos tener bajo control, lo que sucede con este fichero, el primer paso
+será descargarse Git y configurar el usuario y su correo para que de esta forma, cada commit,
+identifiquen al usuario que llevó a cabo esos cambios.
+
+Para ello utilizaremos los comandos:
+
+0> git config --global user.name "alex"
+0> git config --global user.email "alexmarmelo@gmail.com"
+
+El siguiente paso es identificar el proyecto (o lo que sea que queramos que Git tenga bajo control).
+El proyecto debe estar recogido en una carpeta ya que todo lo que ésta carpeta contenga, será lo que Git tendrá bajo su supervisión.
+
+Una vez identificada la carpeta del proyecto que queremos versionar con Git, el siguiente paso es el de crear un repositorio de Git en esa capreta.
+
+1)> git init --> Comando que crea un carpeta llamada .git que contiene información
+			sobre el repositorio que acabamos de crear.
+			Este comando lo ejecutamos dentro de la carpeta que contendrá todo aquello
+			que queramos versionar y como resultado creará el directorio .git dentro 
+			de la misma.
+			
+2)> git status --> Comando que nos permite ver el estado actual del proyecto 
+			(ficheros no rastreados y cambios en staging pendientes de commit).
+	
+	-------------------------------------------------------------------------
+	On branch master
+
+	Initial commit
+
+	Untracked files:
+	  (use "git add <file>..." to include in what will be committed)
+
+			file-1.txt
+
+	nothing added to commit but untracked files present (use "git add" to track)
+	----------------------------------------------------------------------------
+
+La propia leyenda nos informa que existe un fichero no que se está rastreando
+y que si queremos rastrearlo usemos el comando "git add nombre_del_fichero.extensión"
+
+3)> git add file-1.txt --> Añade el fichero file-1.txt al área de "Staging" (repositorio local).
+							
+						Puede usarse 3)> git add . para añadir TODO lo que se haya modificado en cualquiera de las carpetas que forman ese proyecto.
+
+						Puede usarse 3)> git add -i para que git nos pregunte uno a uno si queremos o no añadir cada uno de los ficheros modificados.
+
+	===================================================================
+	Un repositorio en Git puede entenderse como formado por tres partes
+
+	Working Directory -------> Staging Area -----------------> Repository
+	Donde trabajamos		   Donde se listarán			   Donde Git almacena permanentemente
+	creando, eliminando		   los cambios que hagamos		   los cambios que se considerarán
+	y editando ficheros.	   en el working directory		   diferentes versiones del proyecto.
+
+	===================================================================
+
+Una vez añadido el fichero volvemos a preguntarle a Git sobre el estado.
+
+4)> git status
+
+	------------------------------------------------------------------
+	5)> git status
+	On branch master									//Estamos en la rama master.
+																	
+	Initial commit												
+
+	Changes to be committed:							// hay un nuevo fichero en staging
+	  (use "git rm --cached <file>..." to unstage)		// disponible para ser comiteado.
+														// Podemos sacar el fichero de la zona de staging
+	        new file:   file-1.txt						// haciendo >git rm --cached file-1.txt
+	---------------------------------------------------------------------
+
+Si ejecutamos el comando git 5.1> rm --cached file-1.txt veremos que el fichero
+deja de estar rastreado y que ejecutando 5.2> git status obtenemos el mismo resultado que en 2).
+
+Si queremos subir todo lo que hay en la zona de staging al repositorio,
+debemos hacer un commit
+
+------------------------------------------
+6)> git commit -m "mis pruebas"
+[master (root-commit) 23ecc21] mis pruebas
+ 1 file changed, 1 insertion(+)
+ create mode 100644 file-1.txt
+------------------------------------------
+ 
+Podemos tener acceso al diario de commits llevados a cabo sobre el repositorio 
+mediante el comando 'git log'
+
+-----------------------------------------------
+7)> git log
+commit 23ecc2112f93b4ca7d3a88f4a911e1bfa2b19153
+Author: amarmelo <alexmarmelo@gmail.com>
+Date:   Thu Oct 6 22:27:13 2016 +0200
+
+    mis pruebas
+-----------------------------------------------
+
+En Git, el commit sobre el que estás actualmente se le conoce como
+HEAD. En la mayoría de los casos el commit más reciente es el HEAD commit.
+
+8)> git show HEAD --> Permite ver el HEAD commit (el más reciente)
+					-> mostrando la información que muestra git log pero además también
+					-> los cambios en los ficheros que ya están commitados.
+
+====================================================================
+Hasta este punto hemos visto operaciones sobre un repositorio local.
+A continuación veremos operaciones sobre un repositorio remoto.
+====================================================================
+
+Si disponemos de un repositorio remoto, podemos configurar Git con un alias
+asociado a ese repositorio remoto para así referirnos a él cada vez que queramos
+subir o bajar cambios.
+
+9)> git remote add origin http://url.al.repositorio.git
+	-> Con este comando, estamos asignando el nombre origin	al repositorio remoto.
+	El alias origin es el alias más usado normalmente pero podemos ponerle el nombre
+	que queramos, por ejemplo: git remote add remoterepo http://url.al.repositorio.git
+
+Una vez configurado el repositorio remoto, podemos hacer push y pull sobre éste para actualizar los ficheros que estamos rastreando.
+
+Una vez agregado un repositorio remoto, podemos listar los repositorios existentes mediante el comando git remote -v
+
+----------------------------------------------------------------------------
+origin        https://amarmelo@bitbucket.org/amarmelo/frontend.git (fetch)
+origin        https://amarmelo@bitbucket.org/amarmelo/frontend.git (push)
+----------------------------------------------------------------------------
+
+10)> git push origin master
+	-> Nos permite subir a origin (http://url.al.repositorio.git) los cambios que tenemos en nuestro HEAD (último commit en nuestro repositorio), a la rama master remota.
+
+Si por el contrario queremos actualizar los ficheros de nuestro repositorio local con
+los ficheros modificados en el repositorio remoto, deberemos hacer un pull.
+
+11)> git pull 
+	-> Actualiza nuestro repositorio local al commit más nuevo.
+
+Puede suceder que al descargarse los cambios de un repositorio, éstos hayan cambiado
+respecto a los nuestros (haya ficheros con conflictos). En este caso será necesario, 
+solucionar estos conflictos, o bien descartando los nuestros o descartando los cambios
+remotos o bien fusionando los cambios remotos con los nuestros.
+El caso más complejo será el de fusionar los cambios. Si estos cambios afectan a partes
+de código distintas, Git será capaz de hacer un automerge sin nuestra colaboración, sin embargo, si por el contrario, esto no es posible, será labor nuestra fusionar los cambios y una vez confirmados, volver a hacer un git add nombre_de_fichero_fusionado.extension.
+Es posible observar las diferencias entre los ficheros con conflictos con el comando git diff.
+
+12)> git diff rama_de_origen rama_de_destino
+
+Tambien podemos fusionar una rama en nuestra rama activa. Para ello es necesario ejecutar el comando git merge.
+
+13> git merge nombre_de_la_rama_a_fusionar_en_nuestra_rama_activa
+
+Pero...¿cómo creamos una rama?
+
+Mediante el comando git checkout -b nombre_de_la_nueva_rama, conseguimos crear una rama, cópia de la rama en la que nos encontramos actualmente, y que se llamará tal y como hemos indicado en 'nombre_de_la_nueva_rama'. Además de crear la rama, git nos 
+cambiará a ella directamente.
+
+Para cambiar de una rama a otra, lo que hacemos es un checkout de la rama en cuestion por lo que si queremos cambiar de master a mi_rama, haremos lo siguiente:
+
+14)> git checkout mi_rama
+
+Hasta este punto hemos creado una rama nueva, copia de la rama en la que nos encontrábamos en ese momento pero, esta rama, no existe para el resto del mundo hasta que hagamos nuestro primer push de la misma al repositorio remoto.
+
+15)> git push origin mi_rama
+	-> Recuerda que al hacer un pusch es cuando la subimos al repositorio remoto.
+
+Podemos eliminarla totalmente mediante el comando:
+
+15)> git branch -d mi_rama
+	Recuerda que no podrás eliminar una rama si estás en ella actualmente por lo que será necesario cambiar a otra para poder llevar a cabo la eliminación correctamente. Este comando no obstante, borra la rama del repositorio local, no 
+	del repositorio remoto.
+
+Para poder borrar una rama del repositorio remoto tendremos que ejecutar el siguiente comando:
+
+16)> git push origin :mi_rama
+	-> Este comando trata de eliminar la rama :mi_rama del repositorio remoto, si ésta existe. No la borra del repositorio local.
+
+Existe un comando llamado git fetch, este comando permite descargarse los cambios del repositorio remoto, y los deja en un repositorio espejo para que los podamos comprobar
+antes de hacer el git merge. POr el contrario git pull es una combinación de ambos resumida en un único comando.
+
+¿Cómo creamos Tags y para qué los necesitamos?
+
+Los tags son alias a versiones estables subidas a master que queremos poder identificar rápidamente. Por ejemplo, nos serviría para cuando hemos subido a Pro la versión 1.0 de una aplicación, que se corresponde con el commit con hash 4h23iu4h894723. Al crear un tag, lo que hacemos es crear un alias más claro a ese commit en particular.
+
+17)> git tag 1.0.0 1b2e1d63ff
+	-> donde 1b2e1d63ff son los 10 primeros caracteres de la hash que identifica un commit en particular y para éste, se le asocia el alias 1.0.0
+
+-------------------
+Deshaciendo cosas!!
+-------------------
+
+En ocasiones erramos al poner el comentario de un commit o nos olvidamos de subir algún fichero, etc... y de esto nos damos cuenta justo después de haber hecho un commit.
+
+Podemos usar el parámetro --amend de git commit, para volver a repetir el último commit. Este comando lo que hará será volver a sacar una foto de lo que hay en el área de staging (index) y permitirá volver a introducir un nuevo mensaje. Si en el area de staging no hay ficheros nuevos, entonces sólo cambiaremos el mensaje asociado al commit, si hay nuevos ficheros, los añadirá al último commit como si sólo hubiese existido un único commit.
+
+18)> git commit -m 'initial commit'
+19)> git add forgotten_file
+20)> git commit --amend

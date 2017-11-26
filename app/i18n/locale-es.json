@@ -1,0 +1,13 @@
+{
+	"LOGIN_TITLE" : "Acceso",
+	"LOGIN_EMAIL": "Correo electrónico",
+	"LOGIN_PASSWORD": "Contraseña",
+	"LOGIN_VALIDATE": "Validar",
+	"":"",
+	"USERDATA_TITLE": "Información de usuario",
+	"USERDATA_NAME" : "Nombre:",
+	"USERDATA_SURNAME" : "Apellidos:",
+	"USERDATA_AGE" : "Edad:",
+	"USERDATA_GENDER" : "Sexo:",
+	"USERDATA_CLOSE" : "Cerrar"
+}

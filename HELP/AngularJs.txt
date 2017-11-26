@@ -1,0 +1,1360 @@
+﻿Curso de AngularJS
+
+=======		
+Parte 1
+=======
+
+	Si utilizamos JavaScript para crear sitios web dinámicos, 
+	Angular puede ayudarnos a:
+
+		Organizar el javascript.
+		Crear sitios web responsivos.
+		Se integra muy bien con jQuery.
+		Es muy fácil de testear lo que permite crear software mantenible.
+		
+	AngularJS es un framework Javascript para añadir interactividad con HTML.
+
+Componentes de AngularJS
+
+	Directivas -> Angular añade comportamiento al HTML a través de directivas.
+	Mediante las directivas hacemos referencia a código javascript para proporcionar 
+	comportamiento a las páginas.
+	
+		Una directiva es una marca en un tag html que le dice a angular que ejecute o
+		referencie cierto código JavaScript.
+		Las directivas es donde se ata el comportamiento.
+
+		Directivas --> 
+				"ng-controller" -> Ejecuta una función javascript.
+				"ng-app" -> Crea una aplicación angular ejecutando el módulo referenciado.
+
+		<tagHTML ng-controller="nombre_funcion"/>
+
+		"nombre_funcion" es el nombre la función javascript que queremos que se cargue
+		o a la que queremos hacer referencia desde el código html.
+
+	Modulos -> Los módulos es donde escribimos trozos de nuestra aplicación Angular.
+		Mediante estos conseguimos que nuestro código se mantenga encapsulado,
+		haciendo de esta forma que el codigo sea más mantenible, legible y testable.
+		Es también dónde se definen las dependencias de la aplicación, si las tiene.
+				
+		var app = angular.module('store', []);  -> Declarado en el archivo "app.js"
+		
+		angular -> AngularJS
+		store -> Nombre del módulo.
+		[] -> Array de dependencias -> Siempre se envía aunque sea vacío.
+		
+		El archivo "app.js" debe declararse para poder usarse en la página HTML. --> index.html
+		<script type="text/javascript" src="app.js"></script>
+		
+	Expresiones -> Permiten introducir valores dinámicos en el HTML.
+
+Ejercicio de prueba
+-------------------
+
+	Fichero app.js
+	--------------
+		
+		var app = angular.module('gemStore',[]);
+		
+	Fichero index.html
+	------------------
+		<!DOCTYPE html>
+		<html ng-app="gemStore"> --> Se vincula el módulo "gemStore" con la página HTML.
+		  <head>
+			<link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+			<script type="text/javascript" src="angular.min.js"></script>
+			<script type="text/javascript" src="app.js"></script> --> Se incluye en fichero que contiene la definicion del módulo que usaremos.
+		  </head>
+		  <body>
+			<h1>{{"Hello, Angular!"}}</h1> --> Expresión que añadimos.
+		  </body>
+		</html>
+
+=======		
+Parte 2
+=======
+		
+	Controllers -> Controllers nos permiten mandar datos a una página.
+	Los controllers es donde definimos el comportamiento de nuestras aplicaciones definiendo funciones y valores.
+	
+	Por ejemplo, en javascript podemos definir una variable gem con las propiedades seteadas de una gema.
+	
+	var gem = {
+		name : 'Dodecahedron',
+		price: 2.95,
+		description: '...',
+	}
+	
+	Si queremos mandar los datos de esta variable 'gem' a la página necesitamos los controllers.
+	
+	(function(){
+		var app = angular.module('store', []); --> Se crea un módulo llamado 'store'.
+		
+		app.controller('StoreController', function(){ --> Al módulo se le setea un controlador llamado 'StoreController'
+			this.product = gem;
+		});
+	
+		var gem = {
+			name : 'Dodecahedron',
+			price: 2.95,
+			description: '...',
+		}
+	})();
+	
+	<body>
+		<div ng-controller="StoreController as store"> --> El tag div tiene asociado una directiva 'ng-controller' con el nombre del controller
+													   a la que se le asocia un alias para hacer más sencillo su referencia.
+			<h1> {{store.product.name}} </h1>
+			<h2> ${{store.product.price}} </h2>
+			<p> {{store.product.description}} </p>
+		</div>
+		{{store.product.name}} --> El acceso desde fuera del ámbito del div, en el que se ha referenciado al controller, no funcionará.
+	</body>
+	
+Ejercicio de prueba parte 2
+
+Fichero app.js
+--------------
+(function(){
+  var gem = { name: 'Azurite', price: 2.95 };
+  var app = angular.module('gemStore', []);
+    
+  //Añadimos a la aplicación gemStore un controller llamado 'StoreController'
+  app.controller('StoreController', function(){
+    this.product = gem; --> Asignamos a la propiedad 'product' del controlador el objeto gem.
+  });
+  
+})();
+
+
+Fichero index.html
+------------------
+
+<!DOCTYPE html>
+<html ng-app="gemStore">
+  <head>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+  </head>
+  <body ng-controller='StoreController as store'> -> Vinculamos el controlador 'StoreController' al body y le damos el alias 'store'
+    <div class="product row">
+      <h3>
+        {{store.product.name}} --> Mostramos el nombre del producto
+        <em class="pull-right">{{store.product.price}}</em> --> Mostramos el precio del producto
+      </h3>
+    </div>
+  </body>
+</html>
+
+=======
+Parte 3 
+=======
+
+	* Directiva "ng-show" nos permite mostrar un componente HTML sólo si la expresión vinculada evalúa a cierto.
+	
+		<button ng-show="store.product.canPurchase">Add to Cart</button>
+	
+	* Directiva "ng-hide" nos permite ocultar un componente HTML sólo cuando la expresión vinculada evalúe a cierto.
+	
+		<div ng-hide="store.product.soldOut">
+			...
+		</div>
+
+	* Directiva "ng-repeat" nos permite tratar con colecciones.
+	
+		<div ng-repeat="product in store.products">
+			<h1> {{product.name}} </h1>
+			<h2> ${{product.price}} </h2>
+			<p> {{product.description}} </p>
+			<button ng-show="product.canPurchase">Add to cart</button>
+		</div>
+		
+Ejercicio de prueba parte 3
+
+<!DOCTYPE html>
+<html ng-app="gemStore">
+  <head>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+  </head>
+  <body class="container" ng-controller="StoreController as store">
+    <div class="product row" ng-hide="store.product.soldOut"> --> Ocultamos el div de productos cuando la propiedad soldOut evalúa a cierto.
+      <h3>
+        {{store.product.name}}
+        <em class="pull-right">${{store.product.price}}</em>
+      </h3>
+      <button ng-show="store.product.canPurchase">Add to Cart</button> --> Sólo mostramos el botón cuando canPurchase evalúa a cierto.
+    </div>
+  </body>
+</html>
+
+
+NIVEL 2 - Filtros
+
+=======
+Parte 1 
+=======
+
+	Repaso de directivas vistas.
+	
+			ng-app : con la que adjuntamos el módulo de la aplicación con la página.
+			ng-controller : con la que adjuntamos la función de un controller a la página.
+			ng-show y ng-hide : para mostrar y ocultar secciones basándonos en una expresión.
+			ng-repeat : para repetir una sección para cada elemento de un array.
+			ng-src : permite cargar ficheros
+
+	Filtros
+	
+		Para utilizar los filtros, utilizamos pipes de forma que el valor data al que queremos aplicarle un filtro
+		lo enviamos al filtro.
+		
+		{{ data | filter:options }}
+		
+		Por ejemplo:
+		
+		{{'131231231231' | date:'MM/dd/yyyy @ h:ma'}} --> Aplica un formato a la fecha recibida. filtro date
+		
+		{{'octagon gem' | uppercase}} --> capitaliza los caráctertes enviado al filtro. OCTAGON GEM
+		
+		{{'My Description' | limitTo:8}} -> Recorta el número de carácteres enviados al filtro. My Descr
+		
+		<'li ng-repeat="product in store.products | orderBy:'-price'"> -> Para ordenar los productos en orden descendente (indicado por el -). 
+		
+=======
+Parte 2 
+=======
+
+	Directiva ng-click. Ejecuta el código incluido en su expresión, al recibir un click.
+	A modo de ejemplo:
+	
+	<section>
+		<ul class="nav nav-pills">
+			<li> <a href ng-click="tab = 1">Description</a> </li>
+			<li> <a href ng-click="tab = 2">Specificationsescription</a> </li>
+			<li> <a href ng-click="tab = 3">Reviews</a> </li>
+		</ul>
+		{{tab}}
+	</section>
+	
+	Si nos fijamos, aquí vemos la directiva ng-click en cada tab, al hacer click sobre una pestaña en particular,
+	el valor de la variable tab se asigna al valor que aplique.
+	
+	Una de las peculiaridades de Angular es el enlace de datos en dos sentidos, esto significa que las expresiones son
+	reevaluadas cuando cambia la propiedad, eso implica que aunque la página se haya cargado ya, cada vez que cliquemos
+	sobre un tab en particular, la pantalla mostrará su valor actualizado.
+	
+	<div class="panel" ng-show="tab ===1">
+		<h4>Description</h4>
+		<p>{{product.description}}</p>
+	</div>
+	<div class="panel" ng-show="tab ===2">
+		<h4>Description</h4>
+		<blockquote>None yet</blockquote>
+	</div>
+	<div class="panel" ng-show="tab ===3">
+		<h4>Reviews</h4>
+		<blockquote>None yet</blockquote>
+	</div>
+	
+	Recordemos que la directiva "ng-show" la utilizabamos para mostrar algo si se cumple cierta condición.
+	En el ejemplo de arriba si la variable tab vale 1 se mostrará el panel 1 y el resto se ocultarán.
+	
+	Nueva directiva ng-init, nos permite inicializar un valor.
+	
+	Nueva directiva ng-class que nos permite establecer una clase CSS en función del resultado de una expresión.
+	
+	<li ng-class="{ active:tab === 3}"> --> Si el tab activo es el 3, se setea la clase "active" sino no se pone nada.
+		<a href ng-click="tab = 3">Reviews</a>
+	</li>
+	
+	Llegados a este punto, si observamos el siguiente código HTML veremos que éste empieza a tener mucha lógica incrustada.
+	
+	<section ng-init="tab = 1">
+		<ul class="nav nav-pills">
+			<li ng-class="{ active:tab === 1}">
+				<a href ng-click="tab = 1">Desription</a>
+			</li>
+			<li>
+				<a href ng-click="tab = 2">Specificationsescription</a>
+			</li>
+			<li>
+				<a href ng-click="tab = 3">Reviews</a>
+			</li>
+		</ul>
+		<div class="panel" ng-show="tab ===1">
+			<h4>Description</h4>
+			<p>{{product.description}}</p>
+		</div>
+	...
+	
+	La idea sería poner esta lógica en algún lugar donde organizarla y ese lugar es un controller.
+	Lo sensato es meter este código en un controller específico para esta lógica.
+	
+Prueba Test 2
+
+	(function() {
+		var app = angular.module('gemStore', []);
+
+		app.controller('StoreController', function(){
+			this.products = gems;
+		});
+
+		app.controller('TabController', function(){ --> Como se puede ver añadimos un nuevo controller.
+		this.tab = 1; --> Inicializa el tab al primero.
+
+		this.setTab = function(setTab){ -> 
+			this.tab = setTab;
+		};
+    
+		this.isSet = function(value){ -> Funcion 
+		return (value === this.tab);
+		};
+	});
+	
+
+=======
+Nivel 3
+=======	
+
+	Nueva directiva "ng-model" permite enlazar elementos de un formulario HTML con propiedades de objetos.
+	
+	Podemos usar ng-model para enlazar la variable "review.terms" con un checkbox
+	
+	<input ng-model="review.terms" type="checkbox"/> I agree to the terms
+		Setea el value a true o false;
+		
+	<input ng-model="review.color" type="radio" value="red"/> Red
+	<input ng-model="review.color" type="radio" value="blue"/> Blue
+	<input ng-model="review.color" type="radio" value="green"/> Green
+		Setea la propiedad value con el contenido del campo valor en función del radio button seleccionado.
+		
+	Creación de un controller para el formulario
+	---------------------------------------------
+	
+	Nueva directiva ng-submit que nos permite llamar a una función cuando el formulario se envia.
+		
+	app.controller("ReviewController", function(){
+		this.review = {}; --> Setea la review a un objeto vacio.
+		
+		this.addReview = function(product) {
+			product.reviews.push(this.review); --> Pone la review dentro del array de reviews
+			this.reviews = {}; --> Limpia los datos de la review y así el formulario queda limpio.
+		};
+	});
+	
+	<form name="reviewForm" ng-controller="ReviewController as reviewCtrl"
+							ng-submit="reviewCtrl.addReview(product)">
+		<blockquote>
+			<b>Stars: {{reviewCtrl.review.stars}}</b>
+			{{reviewCtrl.review.body}}
+			<cite>by: {{reviewCtrl.review.author}}</cite>
+		</blockquote>
+		
+		<select ng-model="reviewCtrl.review.stars">
+			<option value="1">1 star</option>
+			<option value="2">2 stars</option>
+			....
+		</select>
+		<textarea ng-model="reviewCtrl.review.body"></textarea>
+		
+	</form>
+	
+-------
+Parte 3
+-------
+	
+	Validaciones. Para utilizar validaciones lo primero es desactivar las validaciones de HTML en los formularios.
+	Para ello usaremos la propiedad "novalidate" en el tag form.
+	En segundo lugar marcaremos todos los campos que sean obligatorios con la propiedad required.
+	
+	Podemos usar código de angular para poder validar si un formulario es válido o no
+	<div> reviewForm is {{reviewForm.$valid}} </div> donde reviewForm es el nombre del formulario y .$valid
+	donde $ indica que estamos referenciando una propiedad del formulario y valid lo lleva Angular.
+	
+	Dentro de la directiva ng-submit podemos encadenar operaciones de modo que podemos validar antes de enviar un formulariosi éste es válido o no
+	
+	<form name="reviewForm" ng-controller="ReviewController as reviewCtrl" ng-submit="reviewForm.$valid && reviewCtrl.addReview(product)" novalidate/>
+	
+=======
+Nivel 4
+=======
+
+	-------
+	Parte 1
+	-------
+	Directiva ng-include.
+		
+	Podemos utilizar esta directiva para incluir porciones de código HTML que se repita asiduamente.
+	
+	fichero index.html
+	------------------
+	
+	<ul class="list-group">
+		<li class="list-group-item" ng-repeat="product in store.products">
+			<h3 ng-include="'product-title.html'"></h3> --> Nombre del fichero a incluir.
+			<section ng-controller="PanelController as panel">
+			
+	"ng-include" espera habitualmente una variable que contenga el nombre del fichero a incluir.
+	Para pasar el nombre del fichero directamente como un string es necesario utilizar comillas simple tambien.
+	
+	
+	fichero product-title.html --> Porción de código HTML que se repite numerosas veces y que se extrae para evitar reescrituras.
+	--------------------------
+	
+	{{product.name}}
+	<em class="pull-right">${{product.price}}</em>
+		
+		
+	La traducción hecha por AngularJS incrusta ciertas clases adicionales 
+	y su comportamiento a nivel de navegador, aunque muestre el mismo contenido en la página,
+	no lo es.
+	
+	<h3 ng-include="'product-title.html'" class="ng-scope">
+		<span class="ng-scope ng-binding">Awesome Multi-touch Keyboard</span>
+		<em class="pull-right ng-scope ng-binding">$250.00</em>
+	</h3>
+	
+	En este caso, una vez cargada la página, la directiva ng-included hace una petición ajax
+	y el servidor devuelve el contenido de la porción incluida.
+
+	Existe otra forma de incluir código que implica un poco más de trabajo pero por contrapartida
+	expresa de una forma mucho más limpia qué se está haciendo en la propia página.
+		
+	Custom directive
+		Nos permiten escribir HTML que exprese el comportamiento de nuestra aplicación.
+		
+		Templete-expanding Directives son las más sencillas
+			* definen un custom tag o atributo que se expande o reemplaza.
+			* pueden incluir lógica de Controlador si se necesita.
+			
+		Las directivas pueden utilizarse para:
+			* Expresar interfaces de usuario complejas.
+			* Llamar a eventos y registrar event handlers.
+			* Reutilizar componentes comunes.
+		
+	Ejemplos de definiciones de directivas
+	
+		Element directive
+		-----------------
+		
+		<product-title></product-title> -> No utilizaremos tags que se autocierren <product-title/> dado que 
+						-> algunos navegadores no entienden bien esta sintaxis y dan problemas.!!!
+		
+		app.directive('productTitle', function(){
+			return {
+				restrict: 'E',
+				templateUrl: 'product-title.html'
+			};
+		});
+		
+		<h3>
+			{{product.name}}
+			<em class="pull-right">$250.00</em>
+		</h3>
+		
+		
+		Attribute directive
+		-------------------
+		
+		<h3 product-title></h3>
+		
+		app.directive('productTitle', function() {
+			return {
+				restrict: 'A',
+				templateUrl: 'product-title.html'
+			};
+		});
+		
+		
+		Utilizaremos directivas de elementos para widgets UI.
+		Utilizaremos directivas de atributo para mezclar comportamientos como tooltips.
+
+-------
+Parte 2
+-------
+
+	En esta parte añadiremos dentro de las directivas, referencias a controllers.
+
+
+	Partimos del siguiente ejemplo:
+
+	<section ng-controller="PanelController as panels">
+		<ul class="nav nav-pills">...</ul>
+		<div class="panel" ng-show="panels.isSelected(1)">...</div>
+		<div class="panel" ng-show="panels.isSelected(2)">...</div>
+		<div class="panel" ng-show="panels.isSelected(3)">...</div>
+	</section>
+
+
+	En primer lugar extraemos la sección de código que queremos reutilizar al fichero product-panels.html
+
+
+	Fichero product-panels.html
+	---------------------------
+
+	<section>
+		<ul class="nav nav-pills">...</ul>
+		<div class="panel" ng-show="panels.isSelected(1)">...</div>
+		<div class="panel" ng-show="panels.isSelected(2)">...</div>
+		<div class="panel" ng-show="panels.isSelected(3)">...</div>
+	</section>
+
+		
+	Fichero index.html
+	------------------
+
+	<h3> <product-title> </h3>
+	<product-panels ng-controller="PanelController as panels"> -> Al hacer refencia al controller desde la directiva lo quitariamos de aquí.
+		.	.	.
+	</product-panels>
+
+
+	Fichero app.js
+	--------------
+
+	app.directive('productPanels', function(){
+		return {
+			restrict : 'E',
+			templateUrl : 'product-panels.html',
+			controller : function() {
+				--> Aquí va el código del controller.
+			},
+		controllerAs : 'panels' --> Necesitamos especificar el alias del controller que implementaremos.
+		};
+	});
+
+-------
+NIVEL 5 - Dependencias y servicios.
+-------
+
+-------
+PARTE 1 - Dependencias
+-------
+
+	
+	Cuando la aplicación empieza a ser muy grande quizás es hora de refactorizar, veamos un ejemplo:
+
+	(function() {
+		var app = angular.module('store', []);
+
+		app.controller('StoreController', function(){....});
+
+		app.directive('productTitle', function(){....});
+
+		app.directive('productGallery', function(){....});
+	
+		app.directive('productPanels', function(){....});
+	
+		...
+	})();
+
+
+	Lo que haremos será poner todas las directivas referentes a productos en un nuevo fichero al que llamaremos products.js
+	
+	(function(){
+		var app= angular.module('store-products', []);
+		
+		app.directive('productTitle', function(){....});
+
+		app.directive('productGallery', function(){....});
+	
+		app.directive('productPanels', function(){....});
+	})();
+
+	Ahora el tema es especificar que el módulo store, tiene como dependencia el módulo 'store-products',
+	para ello, el array que hasta ahora indicabamos sin valores, ahora tendrá una dependencia.
+
+	(function() {
+		var app = angular.module('store', ['store-products']);
+
+		app.controller('StoreController', function(){....});
+	
+		...
+	})();
+	
+	
+	Además, será necesario hacer el include en la página incial del nuevo fichero .js.
+
+-------
+PARTE 2 - Servicios
+-------
+
+	Los servicios proporcionan a nuestro controller funcionalidad adicional.
+
+		Recuperando datos JSON desde un servicio web con $http
+		Dejando trazas de log en la consola javascript mediante $log
+		Filtrando arrays con $filter
+
+	Todos los servicios propios de angular empiezan con $.
+
+	El servicio $http es la forma mediante la cual hacemos una petición asincrona a un servidor.
+	
+
+	Utilizando $http como una función con un objeto que tiene opciones.
+		$http({method: 'GET', url : '/products.json'});
+
+
+	Utilizando uno de los métodos reducidos.
+		$http.get('/products.json', {apiKey: 'myApiKey'});
+
+	Ambos métodos retornan un objeto PROMESA con .success() y .error()
+
+	Si le indicamos a $http que recupere un JSON, el resultado se decodificará automaticamente 
+	en objetos javascript y arrays.
+
+
+	¿Cómo usa un Controller un Servicio como $http?
+
+	app.controller('SomeController', ['$http', function($http){ 
+
+	} ]);
+
+	Tal y como se puede observar, con '$http' especificamos el nombre del servicio
+	que queremos utilizar y con el parámetro dentro de la función, pasamos a tener un
+	parámetro dentro de la función para que podamos usar $http.
+
+ 	Si necesitásemos más servicios, basta con encadenarlos ['$http', '$log', .... function($http, $log, $...)
+
+	} ]);
+
+
+	Ejemplo
+	--------
+
+	(function(){
+
+		var app = angular.module('store', ['store-products']);
+
+		app.controller('StoreController', ['$http', function($http){
+
+		var store = this;
+
+		store.products = [];
+
+		$http.get('/products.json').success(function(data){
+			store.products = data;
+		});
+
+		}]);
+	})();
+
+
+	$http permite hacer post(), put(), delete(), etc...
+
+	$http.post('/path/to/resource.json', {param : 'value'});
+
+	$http.delete('/path/to/resource.json');	
+
+	u otros métodos HTTP menos usados utilizando el método config
+
+	$http({ method: 'OPTIONS', url: '/path/to/resource.json'});
+
+	$http({ method: 'PATCH', url: '/path/to/resource.json'});
+
+	$http({ method: 'TRACE', url: '/path/to/resource.json'});
+	
+========================================================================================	
+Resumen AngularJS
+========================================================================================
+
+	Directivas
+	----------
+	
+		Son propiedades que añadimos en los tag HTML para añadir comportamiento.
+		Las directivas conocidas (hasta el momento) propias de AngularJS se implementan
+		como propiedades de tags HTML. Sin embargo más adelante se verá que podemos crear
+		nuestras propias directivas como tags HTML directamente.
+		
+		NodeJS nos proporciona algunas ya hechas pero podemos crear nuestras 
+		propias directivas si es necesario.
+		
+			ng-app : Crea una aplicación angular ejecutando el módulo referenciado.
+			
+			ng-controller : Adjuntamos la función de un controller a la página.
+			
+			ng-show : Muestra secciones basándonos en una expresión.
+				<button ng-show="store.product.canPurchase">Add to Cart</button>
+				
+			ng-hide : Oculta secciones basándonos en una expresión.
+				<div ng-hide="store.product.soldOut">
+				
+			ng-repeat : Repite una sección para cada elemento de un array.
+				<div ng-repeat="product in store.products">
+					<h1> {{product.name}} </h1>
+					<h2> ${{product.price}} </h2>
+					<p> {{product.description}} </p>
+					<button ng-show="product.canPurchase">Add to cart</button>
+				</div>
+				
+			ng-src : Permite cargar ficheros.
+								
+			ng-click : Ejecuta el código incluido en su expresión, al recibir un click.
+				<a href ng-click="tab = 1">Description</a>
+			
+			ng-init : Permite inicializar un valor.
+				<section ng-init="tab = 1">	--> Normalmente es mejor hacer este tipo de inicializaciones a nivel del controlador.
+				
+			ng-class : Permite establecer una clase CSS en función del resultado de una expresión.
+				<li ng-class="{ active:tab === 3}"> --> Si el tab activo es el 3, se setea la clase "active" sino no se pone nada.
+					<a href ng-click="tab = 3">Reviews</a>
+				</li>
+				
+			ng-model : Permite enlazar elementos de un formulario HTML con propiedades de objetos.
+				<input ng-model="review.terms" type="checkbox"/> I agree to the terms</input>
+					-->Setea el value a true o false;
+
+			ng-submit : Permite llamar a una función cuando el formulario se envia.
+				<form name="reviewForm" ng-controller="ReviewController as reviewCtrl"
+							ng-submit="reviewCtrl.addReview(product)">
+					<blockquote>
+						<b>Stars: {{reviewCtrl.review.stars}}</b>
+						{{reviewCtrl.review.body}}
+						<cite>by: {{reviewCtrl.review.author}}</cite>
+					</blockquote>
+				</form>
+			
+			ng-include : Permite incluir porciones de código HTML que se repitan asiduamente.
+				<h3 ng-include="'product-title.html'"></h3> --> Nombre del fichero html a incluir.
+				
+	------------------
+	Fichero index.html -> Aquí incrustamos directivas en el HTML para hacer referencia a módulos, controllers, etc...
+	------------------
+		<body>
+			<div ng-controller="StoreController as store"> --> El tag div tiene asociado una directiva 'ng-controller' con el nombre del controller
+														   a la que se le asocia un alias para hacer más sencillo su referencia.
+				<h1> {{store.product.name}} </h1>
+				<h2> ${{store.product.price}} </h2>
+				<p>{{store.product.description}}</p>
+			</div>
+			{{store.product.name}} --> El acceso desde fuera del ámbito del div, en el que se ha referenciado al controller, no funcionará.
+		</body>
+	
+	Podemos crear nuestras propias directivas customizadas si lo vemos necesario.
+	
+		Custom directive
+			Nos permiten escribir HTML que exprese el comportamiento de nuestra aplicación.
+		
+		Templete-expanding Directives son las más sencillas
+			* definen un custom tag o atributo que se expande o reemplaza.
+			* pueden incluir lógica de Controlador si se necesita.
+			
+		Las directivas pueden utilizarse para:
+			* Expresar interfaces de usuario complejas.
+			* Llamar a eventos y registrar event handlers.
+			* Reutilizar componentes comunes.
+		
+	Ejemplos de definiciones de directivas
+	
+		Element directive
+		-----------------
+		
+		<product-title></product-title> -> No utilizaremos tags que se autocierren <product-title/> dado que 
+						-> algunos navegadores no entienden bien esta sintaxis y dan problemas.!!!
+		
+		app.directive('productTitle', function(){
+			return {
+				restrict: 'E',
+				templateUrl: 'product-title.html'
+			};
+		});
+		
+		<h3>
+			{{product.name}}
+			<em class="pull-right">$250.00</em>
+		</h3>
+		
+		
+		Attribute directive
+		-------------------
+		
+		<h3 product-title></h3>
+		
+		app.directive('productTitle', function() {
+			return {
+				restrict: 'A',
+				templateUrl: 'product-title.html'
+			};
+		});
+		
+		
+		Utilizaremos directivas de elementos para widgets UI.
+		Utilizaremos directivas de atributo para mezclar comportamientos
+	
+========================================================================================	
+	
+	Controllers -> En fichero app.js
+	-----------
+	
+		Controllers nos permiten mandar datos a una página. 
+		En los controllers es donde definimos el comportamiento de nuestras aplicaciones definiendo funciones y valores.
+		En general, un controller no debería hacer muchas cosas, únicamente deberían tener la lógica necesaria para una 
+		única vista.
+		
+		En el controller podemos definir variables con valores y acceder a estas desde 
+		el HTML haciendo uso de expresiones, también será donde haremos llamadas a servicios
+		REST para recuperar datos de servidor, etc... De esta forma, la vista sólo contiene
+		directivas y expresiones que nos permiten trabajar y mostrar con los datos pero los 
+		detalles de estos no se mostrarán nunca en la vista.		
+		
+========================================================================================	
+	
+	Modules -> En fichero app.js
+	-------
+	
+		Los módulos es donde escribimos trozos de nuestra aplicación Angular.
+		Mediante estos conseguimos que nuestro código se mantenga encapsulado,
+		haciendo de esta forma que el código sea más mantenible, legible y testable.
+		Es también dónde se definen las dependencias de la aplicación, si las tiene.
+		
+		Un módulo es donde se añaden los distintos artefactos que usaremos en nuestra aplicación.
+		entendiendose como artefactos:
+			Filtros,
+			Constantes,
+			Servicios,
+			Factorías,
+			Providers,
+			Config,
+			Run,
+			Etc.
+					
+		--------------
+		Fichero app.js -> Donde definimos el módulo y los controllers.
+		--------------
+		
+		(function(){
+		var app = angular.module('store', []); --> Se crea un módulo llamado 'store'.
+		
+		app.controller('StoreController', function(){ --> Al módulo 'store' se le setea 
+													  --> un controlador llamado 'StoreController'.
+			this.product = gem;						  --> Dentro del controller es donde picamos el 
+													  --> comportamiento de nuestras aplicaciones.
+		});
+	
+		var gem = {
+			name : 'Dodecahedron',
+			price: 2.95,
+			description: '...'
+			}
+		})();
+		
+		-------------
+		Fichero index.html
+		-------------
+		<body>
+			<div ng-controller="StoreController as store"> --> El tag div tiene asociado una directiva 'ng-controller' con el nombre del controller
+														   a la que se le asocia un alias para hacer más sencillo su referencia.
+				<h1> {{store.product.name}} </h1>
+				<h2> ${{store.product.price}} </h2>
+				<p>{{store.product.description}}</p> --> Se recupera del controller 'store' el campo description del producto.
+			</div>
+			{{store.product.name}} --> El acceso desde fuera del ámbito del div, en el que se ha referenciado al controller, no funcionará.
+		</body>
+		
+	Expresiones
+	-----------
+		Nos permiten introducir valores dinámicos en el HTML.
+		
+	Peculiaridades de AngularJS
+	-------------------------
+	
+		En todos los ejemplos del tutorial se asignaban alias a los controller.
+		Estos alias permitían después, hacer referencia a variables internas dentro
+		del controlador, siempre haciendo referencia al alias.
+		
+		Hay otros ejemplos por internet en los que no se utilizan los alias.
+			
+		var app=angular.module("app",[]);
+	 
+		function PruebaController($scope) {
+			$scope.mensaje="Hola Mundo";
+		}
+		
+		$scope.cambiarMensaje=function() { --> Al definir la función en el scope, la hacemos accesible desde el HTML con databinding para poder ver los cambios en tiempo real.
+			$scope.mensaje="Adios mundo cruel :-)";
+		}
+		
+	-------------------------
+	<!DOCTYPE html>
+	<html ng-app="app">
+
+	  <head>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+		<script src="script.js"></script>
+	  </head>
+
+	  <body ng-controller="PruebaController">
+		<h1>{{mensaje}}</h1> --> Se hace referencia a la variable mensaje y ésta es accesible pq el valor está asignado a $scope.
+							 --> dentro del controller.
+	  </body>
+
+	</html>
+	--------------------------
+	
+	SERVICIOS
+	---------
+	
+		AngularJS dispone de 5 tipos de servicios: Constantes, Valores, Servicios, Factorías y Proveedores.
+		Un servicio es un objeto Javascript que nos permite obtener información.
+		
+		Servicio $http de AngularJS. Hace la típica llamada AJAX a un servidor para obtener información de él.
+		Servicio $log de AngularJS que nos permite generar un log de nuestra aplicación.
+		Etc..
+		
+		Ventajas de los servicios
+			
+			Facilitar el TDD: El obtener los servicios mediante inyección de dependencias, ( en lugar de crearlos en el propio código) permite
+			al hacer TDD modificar los servicios por objetos Mock y hacer pruebas unitarias.
+			
+			Decorar servicios: Podemos interceptar la creación del servicio para poder añadir métodos o modificar su comportamiento.
+			
+			Facilitar relaciones entre servicios: 
+			
+			Modificar implementaciones: Podemos tener n módulos que implementen un mismo servicio de distintas formas. Cambiar de una implementación
+			a otra sería tan sencillo como hacer que dependiera de uno u otro módulo.
+		
+		
+		Ejemplo del servicio de log.
+		----------------------------
+		
+			var app=angular.module("app",[]);
+   
+			app.controller("SeguroController",function($scope,$log) {
+			$scope.seguro={};
+	
+			$log.debug("Acabamos de crear el $scope");
+			});
+	
+		Hay un tema a tener en cuenta cuando se utilizan herramientas para minimizar el javascript, 
+		la forma de declarar el controller haciendo referencia a las variables $scope y $log en el ejemplo anterior
+		tiene un problema cuando pasa por un minimizador y es que cambia el nombre de las variables $log y $scope y AngularJS
+		ya no sabe de qué le estamos hablando.
+		
+		Para solucionar esto existe otra forma de declarar estas variables que se pasan por inyección.
+		En el siguiente ejemplo se ve como pasamos un array con los nombres de los servicios a inyectar.
+		Los valores de este array no se modifican al minimizar el código por lo que AngularJS sabe que 
+		a equivale a $scope y b equivale a $log).
+			
+		app.controller("SeguroController",['$scope','$log',function(a,b) {
+		
+		}]);
+	
+	
+		Servicio $http
+		--------------
+		
+			Servicio permite hacer peticiones AJAX al servidor. Realmente es como el objeto XMLHttpRequest o el método ajax() de JQuery,
+		la diferencia es que éste está integrado con Angular como un servicio y de esta forma éste se encarga de notificar a AngularJS que
+		ha habido un cambio en el modelo de JavaScript y actualiza la vista y el resto de dependencias adecuadamente.
+	
+		Veamos ahora alguna de las propiedades:
+
+			method: El método HTTP para hacer la petición. Sus posibles valores son: GET, POST, PUT, DELETE, etc.
+			url: La URL de donde queremos obtener los datos. Puede ser la ruta a un fichero.
+			data: Si usamos el método POST o PUT aquí pondremos los datos a mandar en el body de la petición HTTP.
+			params: Un objeto que se pondrá como parámetros de la URL.
+		
+		Ejemplo
+		-------
+		
+			var app=angular.module("app",[]);
+    
+			app.controller("SeguroController",['$scope','$log','$http',function($scope,$log,$http) {
+				$http({
+				method: 'GET', 
+				url: 'datos.json'
+				}).success(function(data, status, headers, config) {
+					$scope.seguro = data;
+				}).error(function(data, status, headers, config) {
+					alert ("Ha fallado la petición. Estado HTTP:"+status);
+				});
+			}]);
+			
+		
+		Servicio $timeout
+		-----------------
+		
+			Similar al método setTimeout() de JavaScript. Su principal diferencia es que, a parte de ser un servicio, al igual que $http
+		se actualiza la vista al actualizar el modelo desde $timeout.
+		
+		La función $timeout soporta 4 parámetros, veremos los dos más habituales. https://docs.angularjs.org/api/ng/service/$timeout
+
+			fn: La función a llamar cuando acaba el timeout.
+			delay: El tiempo en milisegundos que debe pasar para que se llame a la función.
+			
+		Ejemplo
+		-------
+			
+		var app = angular.module("app",[]);
+   
+		app.controller("PruebaController",['$scope','$timeout',function($scope,$timeout) {
+			$scope.producidoEvento="NO";
+		
+			$timeout(function() {
+				$scope.producidoEvento="SIIIIII";
+			},3000);
+   		}]);
+
+		========
+		constant
+		========
+			El servicio constant se declara pasándole directamente el valor de dicho servicio.
+		Este valor puede ser numérico, texto, un array, un objeto o incluso una referencia a una función.
+		Puede inyectarse en cualquier punto.
+		
+		No es posible inyectar otros servicios en una constante.
+		
+		Servicio que se define adjunto a un módulo.
+		
+			var app=angular.module("app",[]);
+ 
+			app.constant("idioma","es-es"); -> Declaración con String
+			 
+			app.constant("matematicas_simples",{ -> Declaración con un objeto con los métodos sumar y restar.
+			  sumar:function(a,b) {
+				return a+b;
+			  },
+			  restar:function(a,b) {
+				return a-b;
+			  }
+			});
+			 
+			app.constant("radio",10); -> Declaración con valor numérico.
+			 
+			app.constant("area",function(radio) {	-> Declaración con referencia a funcion.
+			  return 3.1416*radio*radio;
+			})
+			 
+			app.controller("PruebaController",["$scope","idioma","matematicas_simples","radio","area",function($scope,idioma,matematicas_simples,radio,area) {
+			  $scope.idioma=idioma;
+			  $scope.suma=matematicas_simples.sumar(3,6);
+			  $scope.area=area(radio);
+			}]);
+		
+		=====
+		value
+		=====
+			Este servicio es prácticamente idéntico a constant.
+		
+		Al igual que constant puede declararse pasándole directamente el valor de dicho servicio.
+		El valor también puede ser numérico, texto, array, objeto o incluso una referencia a una función.
+	
+		Veamos un ejemplo
+		-----------------
+	
+		var app=angular.module("app",[]);
+ 
+		app.value("idioma","es-es");
+		 
+		app.value("matematicas_simples",{
+		  sumar:function(a,b) {
+			return a+b;
+		  },
+		  restar:function(a,b) {
+			return a-b;
+		  }
+		});
+		 
+		app.value("radio",10);
+		 
+		app.value("area",function(radio) {
+		  return 3.1416*radio*radio;
+		})
+		 
+		app.controller("PruebaController",["$scope","idioma","matematicas_simples","radio","area",function($scope,idioma,matematicas_simples,radio,area) {
+		  $scope.idioma=idioma;
+		  $scope.suma=matematicas_simples.sumar(3,6);
+		  $scope.area=area(radio);
+		}]);
+	
+		La diferencia entre un tipo y otro radica en donde se pueden inyectar, que a diferencia del servicio constant no pueden inyectarse en 
+		los bloques config ni en los provider.
+	
+		=======	
+		service
+		=======
+	
+			En los servicios constant y value, pasábamos directamente el valor que debía tener el servicio.
+		Con el tipo service debemos pasar una clase Javascript y será AngularJS quien internamente cree una instancia de la misma.
+	
+		Una funcionalidad que permite AngularJS es que le podamos inyectar servicios en el propio constructor.
+		
+		Veamos un ejemplo:
+	
+		var app = angular.module("app",[]);
+ 
+		app.value("tamanyoInicialRectangulo",{ --> Se crea un servicio value con un objeto inicializado
+		  ancho:2,							   --> con los valores "ancho : 2" y "alto : 3".
+		  alto:3
+		});
+		 
+		function Rectangulo(tamanyoInicial) { -> El contructor permite pasarle un parámetro 
+		  this.ancho = tamanyoInicial.ancho;  -> que contiene el ancho y alto que configurará la instancia 
+		  this.alto = tamanyoInicial.alto;	  -> del rectángulo.
+		   
+		  this.setAncho=function(ancho) {
+			this.ancho=ancho;
+		  }
+		   
+		  this.setAlto=function(alto) {
+			this.alto=alto;
+		  }  
+		   
+		  this.getArea=function() {
+			return this.ancho * this.alto;
+		  }
+		}
+		 
+		app.service("rectangulo",['tamanyoInicialRectangulo',Rectangulo]); --> Se crea un servicio llamado rectangulo que				
+																		   --> pero ahora en lugar de pasarle sólo el nombre
+																		   --> del constructor se le pasa el nombre del servicio
+																		   --> value 'tamanyoInicialRectangulo'. Así inyectamos el 
+																		   --> nombre del servicio al constructor.
+				 
+		app.controller("PruebaController",["$scope","rectangulo",function($scope,rectangulo) {	--> El controller recibe "scope y
+		  $scope.area = rectangulo.getArea();													--> el service 'rectangulo' al que se le pregunta por
+		}]);																					--> area que ya está inicializada a {ancho:2, alto:3}
+																								--> inicialización que se hizo al definir el servicio.
+	
+		=======
+		factory
+		=======
+		
+			El servicio factory. Al declarar un servicio factory, a este se le pasa una función para que ésta retorne el 
+		valor del servicio. Es decir, tenemos una función javascript que actúa como factoría.
+		
+		Al igual que en service se podían inyectar dependencias en el constructor, en un factory se pueden inyectar dependencias
+		en la función factoría.
+		
+		Veamos un ejemplo
+		-----------------
+		
+		var app = angular.module("app",[]);
+ 
+		app.value("tamanyoInicialRectangulo",{ --> Se declara un servicio value llamado 'tamanyoInicialRectangulo'
+		  ancho:2,							   --> que contiene un objeto con los campos ancho con valor 2 y alto con valor 3.
+		  alto:3
+		});
+		 
+		function Rectangulo(tamanyoInicial) {  --> Constructor con parámetros que recibe un objeto con el campo ancho y alto.
+		  this.ancho=tamanyoInicial.ancho;
+		  this.alto=tamanyoInicial.alto;
+		   
+		  this.setAncho=function(ancho) {
+			this.ancho=ancho;
+		  }
+		   
+		  this.setAlto=function(alto) {
+			this.alto=alto;
+		  }  
+		   
+		  this.getArea=function() {
+			return this.ancho * this.alto;
+		  }
+		}
+		 
+		app.factory("rectangulo",['tamanyoInicialRectangulo',function(tamanyoInicialRectangulo) { --> Se declara el servicio factoría llamado "rectangulo"
+		  var rectangulo=new Rectangulo(tamanyoInicialRectangulo);								  --> inyectándole el servicio 'tamanyoInicialRectangulo' 
+		  return rectangulo;																	  --> que se pasa como parámetro a la función que actúa como
+		}]);																					  --> factoría.
+																								  --> Como el servicio factoría debe devolver el valor del servicio
+																								  --> el método devuelve el rectangulo que se acaba de crear;
+		 
+		app.controller("PruebaController",["$scope","rectangulo",function($scope,rectangulo) { -->
+		  $scope.area=rectangulo.getArea();
+		}]);
+	
+		========
+		provider
+		========
+	
+			El servicio provider es el último de los tipos de servicios existentes en angularJS.
+		Un provider es esencialmente igual que un factory pero que permite que se configure antes de crear el valor del servicio.
+		El provider crea un nuevo objeto previo que permite configurar el factory antes de cree el valor del servicio.
+		Este nuevo objeto se llama provider y en un bloque config podemos acceder a él para poder configurar nuestro servicio.
+		
+			Un provider está compuesto por dos partes:
+			
+				Un provider que es una clase JavaScript de la que se crea un único objeto , el cual permite llamar en un bloque config antes de que se llame al factory-provider y asi poder configurar el factory-provider.
+				Podemos inyectar sólo servicios constant y otros providers pero definidos en otros módulos.
+				
+				Un factory-provider, el cual crea el valor del servicio. Es prácticamente como la función factory del tema anterior y la llamamos factory-provider
+				Podemos inyectar constant, value, service, factory y factory-provider.
+				
+		Veamos un ejemplo complejo
+		--------------------------
+		
+		var app = angular.module("app",[]);
+ 
+		app.constant("algoritmo","SHA-1");
+		 
+		function HashProvider() { --> Definimos la clase HashProvider. Posteriormente AngularJS creará una instancia de esta clase.
+		  var _algoritmo = ""; 	  --> Se define la propiedad privada algoritmo la cual contendrá el algoritmo a usar.
+		   
+		  this.setAlgoritmo = function(algoritmo) { --> Método público que nos permite establecer el algoritmo a usar antes de crear la función de hash.
+			_algoritmo = algoritmo;
+		  };
+		   
+		  this.$get=function() {	--> Método público que es realmente el "factory-provider" que creará el valor del servicio.
+			var hashFunction;		--> En toda clase Provider es obligatorio que exista este método público llamado $get.
+									--> Es una obligación que impone AngularJS para que él sepa cuál es el método factory. 
+									--> Podemos ver que este método es exactamente igual al del tema anterior de factory excepto que ahora usa la propiedad privada _algoritmo en vez de llamar al servicio algoritmo. 
+									--> Éste es el método que llamábamos “factory-provider”.
+									
+			if (_algoritmo==="MD5") {
+			  hashFunction = CryptoJS.MD5;
+			} else  if (_algoritmo==="SHA-1") {
+			  hashFunction = CryptoJS.SHA1;
+			} else  if (_algoritmo==="SHA-2-256") {
+			  hashFunction = CryptoJS.SHA256;
+			} else  if (_algoritmo==="SHA-2-512") {
+			  hashFunction = CryptoJS.SHA512;
+			} else {
+			  throw Error("El tipo de algoritmo no es válido:"+_algoritmo);
+			}
+		   
+			var hash = function(message) {
+			  var objHashResult = hashFunction(message);
+			   
+			  var strHashResult = objHashResult.toString(CryptoJS.enc.Base64);
+			 
+			  return strHashResult;
+			}
+		   
+			return hash;
+		  }
+		}
+		 
+		app.provider("hash",HashProvider); --> Definimos el provider con el nombre hash y le pasamos como argumento el nombre de la clase HashProvider.
+		 
+		// Ya tenemos definido el provider pero, ahora necesitamos poder configurarlo para establecer el algoritmo a usar. Sólo los bloques config nos permiten
+		//configurar el provider.
+		app.config(["hashProvider", "algoritmo", function(hashProvider,algoritmo) {  --> Inyectamos el "provider" y la constante "algoritmo" en la función de config. AngularJS nos obliga a añadir el sufijo "Provider" al nombre del proveedor.
+		  hashProvider.setAlgoritmo(algoritmo);										 --> Se llama al método público del provider, llamado setAlgoritmo, para configurar el algoritmo.
+		}]);																		 
+		 
+		// Una vez configurado el provider en el bloque config ya podremos inyectar el servicio donde queramos (controlador, otro servicio, bloque run, etc..)
+		//Un bloque config sólo existe para poder configurar un provider y ninguno de los servicios está aún creado (a excepción de constant).
+		//En un bloque run sin embargo todos los servicios están ya configurados y se pueden usar. Por ello el bloque run es más parecido a un método Main mientras que 
+		//el bloque config es más parecido a un código de preinicialización		
+				 
+		app.controller("PruebaController",["$scope","hash",function($scope,hash) {
+		  $scope.password="s3cret";
+		  $scope.getHash=function(message) {
+			var hashResult=hash(message);
+			return hashResult;
+		  }
+		}]);
+		
+	------
+	Filtro
+	------
+	
+		Los filtros son otros de los artefactos que proporciona nodeJS como las directivas, controladores y los servicios.
+		
+		Los filtros nos permiten modificar cómo se muestran los datos en la página HTML.
+		
+		Existen dos tipos de filtros en función del tipo de datos a los que se aplica.
+			Escalares: Números, fechas, texto, etc. pero no a listas de datos.
+			Listas: Se aplican a listas de datos como arrays.
+		
+		Los filtros se usan añadiendo al valor a mostrar el caracter de tubería | seguido del nombre del filtro y sus opciones.
+		
+		Sintaxis
+		{{valor | filtro:opciones}}
+			
+		Ejemplo -> Al mostrar la variable import se aplica el filtro que limita el número de decimales a 2.
+		<div>{{importe | number:2}}</div>
+		
+		Se pueden aplicar varios filtro distintos concatenando más tuberías y el nombre del siguiente filtro.
+		{{valor | primerfiltro | segundofiltro | tercerfiltro}}
+		
+		Los dos puntos y opciones sólo se pondrán si el filtro correspondiente necesita de parámetros para funcionar.
+		En caso de que hubiese más de un parámetro se separarán por comas.
+				
+		Filtros para escalares
+			number : Permit limitar el número de decimales que se muestran en un número.
+			date: Permite aplicar un formato concreto sobre las fechas.
+			currency:  Muestra un número con el símbolo de la moneda local y con el número de decimales correctos.
+			lowercase: Transforma un String a minúsculas.
+			uppercase: Transforma un string a mayúsculas.
+			
+		Filtros para listas
+			orderBy : Permite ordenar un array.
+			limitTo : Limita el número de elementos de un array.
+			filter : Filtra los datos del array. Este filtro soporta varios tipos de parámetros que le permiten:
+				Buscar en todas las propiedades	
+				Buscar en un propiedad
+				Buscar en varias propiedades
+				Búsqueda combinada
+				Este filtro además dispone de un segundo parámetro que permite indicar cómo se realiza la comparación entre textos
+					false -> Implica hace una búsqueda similar al like "%xxxx%" de SQL.
+					true -> La búsqueda edebe coincidir exactamente con la palabra buscada.
+					funcion -> Que debe recibir dos parámetros (valor de la propiedad + texto a buscar) y devolverá true si 
+								cuadra o false en caso contrario.
+			
+			
+		Los filtros podemos usarlos directamente desde HTML o hacer referencia a ellos y utiizarlos desde el propio javascript.
+		Basta con inyectar $filter en el controller en el que queremos llevar a cabo la operación y ya dentro de éste aprovechar
+		la variable inyectada y recuperar el filtro deseado.
+		
+		var app = angular.module("app",[]);
+		app.controller("PruebaController",['$scope','$filter',function($scope,$filter) {
+			var filtroCurrency=$filter("currency");
+			$scope.importeFormateado = filtroCurrency(2.5231);
+		}]);
+		
+		También podemos crear nuestros propios filtros e invocarlos desde HTML (en expresiones, dentro de directivas) o javascript como cualquier otro filtro 
+		de angularJS.
+		
+		script.js
+		---------
+		
+		function mayusculasFilter(valor,length) {
+   
+		  if (typeof (valor)==="string") {
+			 
+			if (angular.isNumber(length) && length>=0) {
+			  return valor.substr(0,length).toUpperCase()+valor.substr(length);
+			} else {
+			  return valor.toUpperCase();
+			}
+			 
+			 
+		  } else if (angular.isArray(valor)) {
+			var newValue=[];
+			 
+			for(var i=0;i<valor.length;i++) {
+			  if (typeof (valor[i])==="string") {
+				if (angular.isNumber(length) && length>=0) {
+				  newValue.push(valor[i].substr(0,length).toUpperCase()+valor[i].substr(length));
+				} else {
+				  newValue.push(valor[i].toUpperCase());
+				}
+			  } else {
+				newValue.push(valor[i]);
+			  }
+			}
+			 
+			return newValue;
+		  } else {
+			return valor;
+		  }
+		}
+		
+		HTML
+		----
+			<div>{{ "hola mundo" | mayusculas:3 }}</div>
+		
+		Salida
+		------
+			<div>HOLa mundo</div>
+				
+	GENERAL
+	-------
+	
+		Una de las peculiaridades de Angular es el enlace de datos en dos sentidos, esto significa que las expresiones son
+		reevaluadas cuando cambia la propiedad, eso implica que aunque la página se haya cargado ya, cada vez que cliquemos
+		sobre un tab en particular, la pantalla mostrará su valor actualizado.

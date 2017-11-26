@@ -21,8 +21,13 @@
 
     <!-- Add your site or application content here -->
     <div class="header">
-        <div class="container">
-            <p>Cabecera de la aplicación, común para todos.</p>
+        <div class="container" ng-controller="headerbarController as vm">
+            <div class="row">
+                <div class="col-lg-12 text-right">
+                    <button type="button" class="btn btn-primary" ng-click="vm.changeLang('en')">English</button>
+                    <button type="button" class="btn btn-primary" ng-click="vm.changeLang('es')">Spanish</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -30,9 +35,10 @@
       <div class="jumbotron">
         <!-- El tag ui-view es una ventana que sirve para que, cuando un estado esté activo, la vista asociada al este (la template) se cargue dentro de la ventana -->    
         <ui-view> 
-        <!-- La directiva ui-sref se comporta de forma similar a un href pero,
-        en lugar de referenciar una URL como este, referencia un estado. -->
-        <a ui-sref="login" ui-sref-active="active">Login</a></ui-view>
+            <!-- La directiva ui-sref se comporta de forma similar a un href pero,
+            en lugar de referenciar una URL como este, referencia un estado. -->
+            <a ui-sref="login" ui-sref-active="active">Login</a>
+        </ui-view>
     </div>
   </div>
 
@@ -48,6 +54,8 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -60,12 +68,11 @@
 
         <script src="modules/login/login-state.js"></script>
         <script src="modules/userdata/userdata-state.js"></script>
+       <script src="modules/headerbar/headerbar-state.js"></script>
 
-        
+        <script src="modules/headerbar/headerbar-controller.js"></script>        
         <script src="modules/login/login-controller.js"></script>
         <script src="modules/login/login-service.js"></script>
-
-
         <script src="modules/userdata/userdata-controller.js"></script>
 
         <!-- endbuild -->

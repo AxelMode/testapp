@@ -8,17 +8,15 @@
 		$log.info('<<userdataController>> loaded!');
 		var vm = this;
 
-		// //
-
+		///
 		vm.close = close;
-
 		///
 
 		init();
 
 		function init() {
-
 			$log.info('Init en userdataController');
+
 			vm.model = {
 				data : {}
 			};

@@ -1,0 +1,13 @@
+{
+	"LOGIN_TITLE" : "Login",
+	"LOGIN_EMAIL": "Email",
+	"LOGIN_PASSWORD": "Password",
+	"LOGIN_VALIDATE": "Validate",
+	"":"",
+	"USERDATA_TITLE": "User data",
+	"USERDATA_NAME" : "Name:",
+	"USERDATA_SURNAME" : "Surname:",
+	"USERDATA_AGE" : "Age:",
+	"USERDATA_GENDER" : "Gender:",
+	"USERDATA_CLOSE" : "Close"
+}
