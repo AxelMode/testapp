@@ -14,7 +14,7 @@
     <!-- build:css(.tmp) styles/main.css -->
     <!-- endbuild -->
   </head>
-  <body ng-app="testApp">
+  <body ng-app="testApp" ng-strict-di> <!-- El modo ng-strict-di obliga a que todos los servicios de la app informen sus dependecias obligatoriamente -->
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->

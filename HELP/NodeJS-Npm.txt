@@ -1,0 +1,114 @@
+NodeJS y npm
+
+npm makes it easy for JavaScript developers to share the code that they've created to solve particular problems, and for other developers to reuse that code in their own applications.
+
+Podemos consultar la web de npm en el siguiente link: https://docs.npmjs.com/getting-started/what-is-npm
+
+Npm viene de serie en cada versión de NodeJS, sin embargo, las versiones de npm 
+evolucionan mucho más rápido que las de nodeJS y es por esto, que normalmente,
+una vez instalado nodeJS, actualizamos la versión de npm a la última existente.
+
+> npm install npm@latest -g (la opción -g instala npm como global)
+						  puede sustituirse 'latest' por una version específica.
+
+> npm -v (nos permite consultar la versión de npm instalada).
+
+Existen dos formas de instalar paquetes en npm, global o local.
+	Escogeremos qué tipo de instalación utilizar basándonos en la forma en la que queramos usar el paquete en cuestión.
+
+	la instalación local es la por defecto cuando hacemos 
+	> npm install package_name.
+
+	Esta instalación creará en el directorio en curso la carpeta node_modules y descargará
+	y copiará el paquete en ese directorio.
+
+	Si queremos usar el paquete de forma global, para así poder llamarlo desde la linea de comandos, como usamos grunt, lo suyo es instalarlo de forma global.
+
+	> npm install grunt -g
+
+Fichero package.json
+--------------------
+
+	La mejor forma de gestionar los paquetes instalados localmente vía npm es creando un fichero package.json
+
+	Podemos crear un fichero package.json por defecto mediante el siguiente comando:
+
+	> npm init -y (modo de creación del fichero sin preguntas sobre quñe poner en cada campo).
+
+	{
+	  "name": "my_package",  --> nombre del directorio actual desde el que se creo el fichero.
+	  "description": "", --> información de readme.
+	  "version": "1.0.0",
+	  "description": "",
+	  "main": "index.js", 
+	  "scripts": {
+	    "test": "echo \"Error: no test specified\" && exit 1"  --> script por defecto al que podremos llamar vía > npm run test
+	  },
+	  "repository": {
+	    "type": "git",
+	    "url": "https://github.com/ashleygwilliams/my_package.git"
+	  },
+	  "keywords": [],
+	  "author": "",
+	  "license": "ISC",
+	  "bugs": {
+	    "url": "https://github.com/ashleygwilliams/my_package/issues"
+	  },
+	  "homepage": "https://github.com/ashleygwilliams/my_package"
+	}
+
+En este fichero podemos también especificar dependecias. Aquellas que cuelguen de "dependencies", serán
+los paquetes que se instalarán en producción.
+
+Por otro lado los paquetes especificados en "devDependecies" son los que necesitamos para el desarrollo y test de la aplicación pero que no son necesarios en un entorno productivo.
+
+> npm install package_name --save (añade un nuevo paquete en la zona "dependencies").
+
+> npm install package_name --save-dev (añade el paquete en la zona "devDependencies").
+
+
+Versionado semántico y npm
+---------------------------
+
+El versionado semantico es un estándar que gran cantidad de proyectos utilizan para comunicar que tipo
+de cambios hay en cada release.
+
+Si partimos de una version 1.0.0
+
+Todos aquellos cambios mínimos, parches, etc.. que no suponen una pérdida de compatibilidad con lo que ya exsitía, incrementan el último número de la versión. Bug fixes.
+
+	1.0.x
+
+Nuevas funcionalidades que no rompen con lo que ya existía: Minor releases, incrementan el número de en medio.
+
+	1.x.0 -> Subir una minor release implica que el contador de bug fixes se pone a cero de nuevo.
+
+Versiones que rompen la compatibilidad con lo que ya existía, se consideran mayor releases e incrementan
+el primer número.
+
+	x.0.0 -> Subir la major release implica que se resetean los contadores de minor release y bug fixes.
+
+En el fichero package.json, podemos especificar si queremos una versión en particular, indicándolo con la versión exacta o si permitimos esa versión y cualquier actualización de bug fixes (~1.2.3 equivale a decir >=1.2.3 y <1.3.0).
+
+Por otra parte, si especificamos ^1.2.3 equivale a (>=1.2.3 y <2.0.0) o sea, permite cambios a nivel de bug fixes o minor releases pero no permite cambios en major version.
+
+
+Muchas más combinaciones válidas, así como definición de rangos, etc. aquí: https://docs.npmjs.com/misc/semver
+
+Actualizar paquetes locales
+----------------------------
+
+> npm update (lo ejecutamos en el directorio en el que se encuentra el fichero package.json).
+
+Desintalar paquetes
+--------------------
+
+> npm uninstall lodash
+Para eliminar el paquete lodash de "dependencies" en el fichero package.json, será necesario utilizar el flag --save
+
+> npm uninstall --save lodash
+
+Si se instaló el paquete como paquete de desarollo "devDependency", para poder desintalarlo, sólo con el --save no se quitará el fichero package.json, para que también desaparezca de aquí será necesario usar
+--save-dev
+
+> npm uninstall --save-dev lodash

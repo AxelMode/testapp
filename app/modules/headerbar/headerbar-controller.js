@@ -6,11 +6,10 @@
 	headerbarController.$inject = ['$scope','$log', '$translate'];
 
 	function headerbarController($scope, $log, $translate) {
-		$log.info('<<headebar>> loaded');
+		$log.info('<<headebarController>> loaded');
 		var vm = this;
 
 		vm.changeLang = changeLang;
-
 
 		function changeLang(lang) {
 			$log.info('Change Language!!');
